@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="https://openlayers.org/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIS System</title>
+</head>
+<body>
+  <!-- add header using bootstatp -->
+  <div id="map">
+    <div id="header">
+      <img src="./asset/logo.svg" alt="logo" style="height: 80px;">
+      <img src="./asset/ic-menu.svg" alt="menu" style="margin: -15px; height: 80px;">
+      <img id="ic-layers" src="./asset/ic-layers.svg" alt="ic-layers" style="margin: -15px; height: 80px;">
+      <img src="./asset/ic-search.svg" alt="ic-search" style="margin: -15px; height: 80px">
+      <!-- layer-list using bootstrap -->
+      <div  id="layerGroupDiv" class="card" style="width: 18rem; display: none;">
+        <div class="card-body">        
+            
+            <div class="input-group mb-3">
+              <div id="layer-list" class="input-group-prepend">                
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      
+    </div>
+
+    
+  </div>
+
+
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>

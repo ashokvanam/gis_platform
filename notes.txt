@@ -1,0 +1,11 @@
+geo_wfs_url:'http://155.254.244.85/geoserver/guatemala/wfs?',//http://localhost:8080/geoserver/coplug/wfs?service=WFS',
+geo_wms_url:'http://155.254.244.85/geoserver/guatemala/wms?',//http://localhost:8080/geoserver/coplug/wms?service=wms'
+geoserver_user:'ashok',geoserver_password:'mygeoserver1',
+ layers: {
+        parcel: { id: 5, name: 'parcel', title: 'Property', visible: false, minZoom: 20, maxZoom: 30, market: { price_per_sft: 'price_per_sqm', price_per_property: 'total_price' } },
+        block: { id: 4, name: 'block', title: 'Block', visible: false, minZoom: 18, maxZoom: 19, market: { price_per_sft: 'price_sqm_mean', price_per_property: 'prop_price_mean' } },
+        delegation: { id: 3, name: 'delegation', title: 'Delegation', visible: false, minZoom: 15, maxZoom: 17, market: { price_per_sft: 'price_sft_mean', price_per_property: 'total_price_mean' } },
+        // regime:{id:2,name:'zone_10_delegation',title:'Property',visible:false, minZoom:17,maxZoom:30},
+        boundary: { id: 1, name: 'zones', title: 'Zone', visible: true, minZoom: 13, maxZoom: 14, market: { price_per_sft: 'price_sft_mean', price_per_property: 'total_price_mean' } },
+        city: { id: 0, name: 'city', title: 'City', visible: true, minZoom: 1, maxZoom: 13, market: { price_per_sft: 'price_sft_mean', price_per_property: 'total_price_mean' } }
+    }
