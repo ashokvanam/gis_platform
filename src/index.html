@@ -6,38 +6,159 @@
   <link rel="icon" type="image/x-icon" href="https://openlayers.org/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GIS System</title>
+  <link rel="stylesheet" type="text/css" href="./scss/buttons.dataTables.scss">
+  <link rel="stylesheet" type="text/css" href="./scss/mixins.scss">
+  <link rel="stylesheet" type="text/css" href="./scss/common.scss">
+  <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
 </head>
+
 <body>
   <!-- add header using bootstatp -->
   <div id="map">
+    <progress id="progressBar" ></progress>
+    
+
     <div id="header">
-      <img src="./asset/logo.svg" alt="logo" style="height: 80px;">
-      <img src="./asset/ic-menu.svg" alt="menu" style="margin: -15px; height: 80px;">
-      <img id="ic-layers" src="./asset/ic-layers.svg" alt="ic-layers" style="margin: -15px; height: 80px;">
-      <img src="./asset/ic-search.svg" alt="ic-search" style="margin: -15px; height: 80px">
-      <!-- layer-list using bootstrap -->
-      <div  id="layerGroupDiv" class="card" style="width: 18rem; display: none;">
-        <div class="card-body">        
-            
-            <div class="input-group mb-3">
-              <div id="layer-list" class="input-group-prepend">                
-              </div>
-            </div>
+      <header class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+          <div class="col-4 d-flex align-items-center">
+            <a href="" title="Home"><img src="./asset/logo.svg" alt="logo" style="height: 80px;"></a>
+            <button class="circle-btn" style="margin-right: 10px;" title="Menu"><i
+                class="fa-solid fa-bars-staggered"></i></button>
+            <button id="ic-layers" class="circle-btn" style="margin-right: 10px;" title="Layers"><i
+                class="fa-solid fa-layer-group"></i></i></button>
+            <button class="circle-btn" style="margin-right: 10px;" title="Info"><i
+                class="fa-solid fa-circle-exclamation"></i></i></button>
+            <button class="circle-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </div>
+          <div class="col-4 text-center">
+          </div>
+          <div class="col-4 d-flex justify-content-end align-items-center">
+            <!-- <button class="circle-btn" style="margin-right: 10px;"><i class="fa-solid fa-user"></i></button> -->
+            <!-- <button id="ic-settings" class="circle-btn" style="margin-right: 30px;" title="Settings"><i
+                class="fa-solid fa-gear"></i></button> -->
 
           </div>
         </div>
+      </header>
+      <!-- layer-list using bootstrap -->
+      <div id="layerGroupDiv" class="card" style="width: 15rem;">
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div id="layer-list" class="input-group-prepend">
+            </div>
+          </div>
+        </div>
       </div>
-
-
-      
     </div>
-
+    <div id="featureTableDiv" >
+      <button class="btn  " id="featureTableDivCloseBtn" style="float: right;"><i class="fas fa-times" style="color: red;"></i></button>
+      <button id="featureTableDivButton" class="btn " style="float: right;"><i class="fas fa-arrow-up" style="transform:rotate(180deg)"></i></button>
+      <div id="featureTableDataDiv">
+      </div>
+      <div id= "ft_buttons" style="float: right;">
+        <button tooltip="Previous" id="ft_prevButton" class="btn btn-primary"><i class="fas fa-chevron-left" style="color: white;" ></i></button>
+        <button tooltip="Next" id="ft_nextButton" class="btn btn-primary"><i class="fas fa-chevron-right" style="color: white;" ></i></button>
+      </div>
+    </div>
     
+
+    <!-- <div id="sidebar" class="d-flex flex-column  active flex-shrink-0 bg-light" style="width: 4.5rem;">
+
+      <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+        <li class="nav-item">
+          <a class="nav-link py-3 active border-bottom" aria-current="page" title="Home" data-bs-toggle="tooltip"
+            data-bs-placement="left" data-bs-original-title="Home">
+
+            <i class="fa-solid fa-house-chimney fa-xl" style="color: white;"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link py-3 border-bottom" aria-current="page" title="Dashboard" data-bs-toggle="tooltip"
+            data-bs-placement="left" data-bs-original-title="Dashboard">
+
+            <i class="fa-solid fa-gauge-high fa-xl"></i>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link py-3 border-bottom" title="Details" data-bs-toggle="tooltip" data-bs-placement="left"
+            data-bs-original-title="Details">
+            <i class="fa-solid fa-table fa-xl"></i>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link py-3 border-bottom" title="User" data-bs-toggle="tooltip" data-bs-placement="left"
+            data-bs-original-title="User">
+            <i class="fa-solid fa-circle-user fa-xl"></i>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link py-3 border-bottom" title="Draw" data-bs-toggle="tooltip" data-bs-placement="left"
+            data-bs-original-title="Draw">
+            <i class="fa-solid fa-draw-polygon fa-xl"></i>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link py-3 border-bottom" title="Import" data-bs-toggle="tooltip" data-bs-placement="left"
+            data-bs-original-title="Import">
+            <i class="fa-solid fa-file-import fa-xl"></i>
+          </a>
+        </li>
+      </ul>
+      <div class="dropdown border-top">
+        <a class="d-block p-3 link-dark text-decoration-none ">
+          <button id="ic-settings" class="circle-btn " style="margin-right: 30px;" title="Settings"><i
+              class="fa-solid fa-gear "></i></button>
+        </a>
+      </div>
+    </div> -->
+
+    <div id="settingTab" class="" style="display: none;">
+      <!-- add pupup close button -->
+      <i onclick="closeTab(this)" class="fa-solid fa-square-xmark fa-xl"
+        style="float: right; color: rgb(217, 59, 59); margin-right: 10px;"></i>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+            type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+          <button class="nav-link " id="nav-layer-tab" data-bs-toggle="tab" data-bs-target="#nav-layer" type="button"
+            role="tab" aria-controls="nav-layer" aria-selected="true">Layers</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+            role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button"
+            role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <span>No Setting Found</span>
+        </div>
+        <div class="tab-pane fade show " id="nav-layer" role="tabpanel" aria-labelledby="nav-layer-tab">
+          <span>No Setting Found</span>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"><span>No Setting
+            Found</span></div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"><span>No Setting
+            Found</span></div>
+      </div>
+    </div>
   </div>
-
-
-
+  <!-- div for FeatureInfo fix size and add scroll -->
+  <div id="popup" class="popup">
+    <h2 id="popup-heading" class="popup-heading"><b><u>Popup Heading</u></b></h2>
+    <br/>
+    <div id="popup-content"></div>
+    <div style="float: right;">
+      <button tooltip="Previous" class="btn btn-primary" id="popup-prev-btn"> <i class="fas fa-chevron-left" style="color: white;" ></i></button>
+      <button tooltip="Next" class="btn btn-primary"  id="popup-next-btn"><i class="fas fa-chevron-right" style="color: white;" ></i></button>    
+      <!-- <button id="expandBtn"><i class="fas fa-compress"></i></button> -->
+      <button class="btn btn-danger" id="closeBtn"><i class="fas fa-times" style="color: white;"></i></button>
+    </div>
+  </div>
   <script type="module" src="./js/main.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.js"></script>
 </body>
 
 </html>

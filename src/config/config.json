@@ -1,0 +1,36 @@
+{
+    "Title" : "Guatemala",
+    "WMSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wms",
+    "ServerType": "geoserver",
+    "Authrization" : {
+        "UserName" :"gis_app",
+        "Password" : "ace$$@123"
+    },
+    "Layers" : [
+        {
+            "name" : "zone_10_parcel",
+            "title" : "Property",
+            "visible" : false
+        },
+        {
+            "name" : "zone_10_block",
+            "title" : "Block",
+            "visible" : true
+        },
+        {
+            "name" : "zone_10_delegation",
+            "title" : "Delegation",
+            "visible" : true
+        },
+        {
+            "name" : "city",
+            "title" : "City",
+            "visible" : true
+        },
+        {
+            "name" : "zones",
+            "title" : "Zone",
+            "visible" : true
+        }
+    ]
+}

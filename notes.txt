@@ -9,3 +9,8 @@ geoserver_user:'ashok',geoserver_password:'mygeoserver1',
         boundary: { id: 1, name: 'zones', title: 'Zone', visible: true, minZoom: 13, maxZoom: 14, market: { price_per_sft: 'price_sft_mean', price_per_property: 'total_price_mean' } },
         city: { id: 0, name: 'city', title: 'City', visible: true, minZoom: 1, maxZoom: 13, market: { price_per_sft: 'price_sft_mean', price_per_property: 'total_price_mean' } }
     }
+
+
+http://155.254.244.85/geoserver/wms?request=getcapabilities
+
+geoserver_user:'gis_app',geoserver_password:'ace$$@123'
