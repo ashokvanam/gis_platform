@@ -9,8 +9,8 @@
   <link rel="stylesheet" type="text/css" href="./scss/buttons.dataTables.scss">
   <link rel="stylesheet" type="text/css" href="./scss/mixins.scss">
   <link rel="stylesheet" type="text/css" href="./scss/common.scss">
-  <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <!-- <link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
 
 </head>
 
@@ -23,7 +23,7 @@
     <div id="header">
       <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
-          <div class="col-4 d-flex align-items-center">
+          <div class="col-8 d-flex align-items-center">
             <a href="" title="Home"><img src="./asset/logo.svg" alt="logo" style="height: 80px;"></a>
             <button class="circle-btn" style="margin-right: 10px;" title="Menu"><i
                 class="fa-solid fa-bars-staggered"></i></button>
@@ -33,14 +33,14 @@
                 class="fa-solid fa-circle-exclamation"></i></i></button>
             <button class="circle-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
-          <div class="col-4 text-center">
+          <!-- <div class="col-4 text-center">
           </div>
           <div class="col-4 d-flex justify-content-end align-items-center">
-            <!-- <button class="circle-btn" style="margin-right: 10px;"><i class="fa-solid fa-user"></i></button> -->
-            <!-- <button id="ic-settings" class="circle-btn" style="margin-right: 30px;" title="Settings"><i
-                class="fa-solid fa-gear"></i></button> -->
+            <button class="circle-btn" style="margin-right: 10px;"><i class="fa-solid fa-user"></i></button> 
+            <button id="ic-settings" class="circle-btn" style="margin-right: 30px;" title="Settings"><i
+                class="fa-solid fa-gear"></i></button> 
 
-          </div>
+          </div> -->
         </div>
       </header>
       <!-- layer-list using bootstrap -->
@@ -58,7 +58,7 @@
       <button id="featureTableDivButton" class="btn " style="float: right;"><i class="fas fa-arrow-up" style="transform:rotate(180deg)"></i></button>
       <div id="featureTableDataDiv">
       </div>
-      <div id= "ft_buttons" style="float: right;">
+      <div id= "ft_buttons" style="margin-top: -30px;float: right;margin-bottom: 10px;">
         <button tooltip="Previous" id="ft_prevButton" class="btn btn-primary"><i class="fas fa-chevron-left" style="color: white;" ></i></button>
         <button tooltip="Next" id="ft_nextButton" class="btn btn-primary"><i class="fas fa-chevron-right" style="color: white;" ></i></button>
       </div>
@@ -147,18 +147,23 @@
   </div>
   <!-- div for FeatureInfo fix size and add scroll -->
   <div id="popup" class="popup">
-    <h2 id="popup-heading" class="popup-heading"><b><u>Popup Heading</u></b></h2>
-    <br/>
+
+    <div id="popup-heading" class="popup-heading">
+      <span id="popup-title"></span>
+      <button class="btn btn-danger" style="float: right;" id="closeBtn"><i class="fas fa-times" style="color: white;"></i></button> 
+    </div>
     <div id="popup-content"></div>
-    <div style="float: right;">
-      <button tooltip="Previous" class="btn btn-primary" id="popup-prev-btn"> <i class="fas fa-chevron-left" style="color: white;" ></i></button>
-      <button tooltip="Next" class="btn btn-primary"  id="popup-next-btn"><i class="fas fa-chevron-right" style="color: white;" ></i></button>    
+    <div id="popup-buttons" style="width: 100%;">
+      <button tooltip="Goto" class="btn btn-primary" id="popup-goto-btn"> <i class="fas fa-location-crosshairs" style="color: white;" ></i></button>
+      <!-- <button tooltip="Copy" class="btn btn-primary" id="popup-copy-btn"> <i class="fas fa-clipboard" style="color: white;" ></i></button> -->
+      <button style="float: right; margin-left: 5px;" tooltip="Next" class="btn btn-primary"  id="popup-next-btn"><i class="fas fa-chevron-right" style="color: white;" ></i></button>    
+      <button style="float: right;" tooltip="Previous" class="btn btn-primary" id="popup-prev-btn"> <i class="fas fa-chevron-left" style="color: white;" ></i></button>
       <!-- <button id="expandBtn"><i class="fas fa-compress"></i></button> -->
-      <button class="btn btn-danger" id="closeBtn"><i class="fas fa-times" style="color: white;"></i></button>
+      
     </div>
   </div>
   <script type="module" src="./js/main.js"></script>
-<script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.0.3/b-3.0.1/b-colvis-3.0.1/b-html5-3.0.1/datatables.min.js"></script> -->
 </body>
 
 </html>

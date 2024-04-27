@@ -12,11 +12,17 @@ import Feature from "ol/Feature.js";
 import { circular } from "ol/geom/Polygon";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
+import DataTable from "datatables.net-bs5";
+import "datatables.net-buttons-bs5";
+import "datatables.net-buttons/js/buttons.colVis.mjs";
+import "datatables.net-buttons/js/buttons.html5.mjs";
+import "ol-ext/Overlay/PopupFeature.js";
+import GeoJSON from "ol/format/GeoJSON";
+import Style from "ol/style/Style";
+import Stroke from "ol/style/Stroke";
+import Fill from "ol/style/Fill";
 
-// var init
-// create map
 window.jQuery = window.$ = $;
-// window.JSZip = jsZip;
 var currentTableIndex = 0;
 var selectedFeatures = [];
 var startIndex = 0;
@@ -25,83 +31,122 @@ var currentLayerNameFeatureData = undefined;
 var currentLayerTitleFeatureData = undefined;
 var currentLayerTotalFeatureCount = undefined;
 
-window.mapRef = new Map({
-  target: "map",
-  layers: [
-    new TileLayer({
-      source: new OSM(),
-      title: "Open Street Map",
-      visible: true,
+function addBaseMap() {
+  window.mapRef = new Map({
+    target: "map",
+    layers: [
+      new TileLayer({
+        source: new OSM(),
+        title: "Open Street Map",
+        visible: true,
+      }),
+    ],
+    view: new View({
+      center: [configData.Center.X, configData.Center.Y],
+      zoom: configData.Center.Zoom,
     }),
-  ],
-  view: new View({
-    center: [-10071037.762310717, 1644842.6876604778],
-    zoom: 12,
-  }),
+  });
+
+  addMapEvents();
+}
+
+function addCurrentLocationControls() {
+  //myLocationlayer
+  const myLocationSrc = new VectorSource();
+  const myLocationlayer = new VectorLayer({
+    source: myLocationSrc,
+    title: "My Location",
+  });
+
+  mapRef.addLayer(myLocationlayer);
+
+  navigator.geolocation.watchPosition(
+    function (pos) {
+      const coords = [pos.coords.longitude, pos.coords.latitude];
+      const accuracy = circular(coords, pos.coords.accuracy);
+      myLocationSrc.clear(true);
+      myLocationSrc.addFeatures([
+        new Feature(
+          accuracy.transform("EPSG:4326", mapRef.getView().getProjection())
+        ),
+        new Feature(new Point(olProj.fromLonLat(coords))),
+      ]);
+    },
+    function (error) {
+      console.log(`ERROR: ${error.message}`);
+    },
+    {
+      enableHighAccuracy: true,
+    }
+  );
+
+  //Locate me Control
+  const locate = document.createElement("div");
+  locate.className = "ol-control ol-unselectable locate ";
+  locate.innerHTML = '<button title="Locate me">◎</button>';
+  locate.addEventListener("click", function () {
+    if (!myLocationSrc.isEmpty()) {
+      mapRef.getView().fit(myLocationSrc.getExtent(), {
+        maxZoom: 18,
+        duration: 500,
+      });
+    }
+  });
+  mapRef.addControl(
+    new Control({
+      element: locate,
+    })
+  );
+console.log("mapRef --> ",mapRef);
+  mapRef.on('zoomstart', function() {
+    var zoom = mapRef.getZoom();
+    console.log("zoomstart = ",zoom);
+    
+    // Loop through layers and toggle visibility based on zoom level
+    // for (var layer in layerConfig) {
+    //     if (zoom >= layerConfig[layer].minZoom && zoom <= layerConfig[layer].maxZoom) {
+    //         map.addLayer(eval(layer)); // Show layer
+    //     } else {
+    //         map.removeLayer(eval(layer)); // Hide layer
+    //     }
+    // }
 });
 
-//myLocationlayer
-const myLocationSrc = new VectorSource();
-const myLocationlayer = new VectorLayer({
-  source: myLocationSrc,
-  title: "My Location",
-});
+}
 
-mapRef.addLayer(myLocationlayer);
+function addHighlightLayer() {
+  // highlight layer
+  window.highlightSrc = new VectorSource({
+    format: new GeoJSON(),
+  });
+  const highlightLayer = new VectorLayer({
+    source: highlightSrc,
+    zIndex: 1000,
+    title: "Highlight",
+    style: new Style({
+      stroke: new Stroke({
+        color: "red",
+        width: 2,
+      }),
+      fill: new Fill({
+        color: "rgba(255, 0, 0, 0.2)",
+      }),
+    }),
+  });
+  mapRef.addLayer(highlightLayer);
+}
 
-navigator.geolocation.watchPosition(
-  function (pos) {
-    const coords = [pos.coords.longitude, pos.coords.latitude];
-    const accuracy = circular(coords, pos.coords.accuracy);
-    myLocationSrc.clear(true);
-    myLocationSrc.addFeatures([
-      new Feature(
-        accuracy.transform("EPSG:4326", mapRef.getView().getProjection())
-      ),
-      new Feature(new Point(olProj.fromLonLat(coords))),
-    ]);
-  },
-  function (error) {
-    console.log(`ERROR: ${error.message}`);
-  },
-  {
-    enableHighAccuracy: true,
-  }
-);
-
-//Locate me Control
-const locate = document.createElement("div");
-locate.className = "ol-control ol-unselectable locate ";
-locate.innerHTML = '<button title="Locate me">◎</button>';
-locate.addEventListener("click", function () {
-  if (!myLocationSrc.isEmpty()) {
-    mapRef.getView().fit(myLocationSrc.getExtent(), {
-      maxZoom: 18,
-      duration: 500,
-    });
-  }
-});
-mapRef.addControl(
-  new Control({
-    element: locate,
-  })
-);
-
-$.getJSON("../config/config.json", function (data) {
-  window.layerNamesListWMS = data.Layers;
-  localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
-  window.configData = data;
-
+function addWMSLayers() {
   layerNamesListWMS.forEach((eachVisibleLayer) => {
     const wmsLayer = new TileLayer({
       source: new TileWMS({
-        url: configData.WMSEndPoint,
-        serverType: configData.ServerType,
+        url:
+          configData.WMSProxy + "?url=http://opendata.maps.vic.gov.au/geoserver/wms?",
         params: {
           LAYERS: eachVisibleLayer.name,
+          FORMAT: "image/png",
           TILED: true,
         },
-        tileLoadFunction: authTileLoadFunction,
       }),
       title: eachVisibleLayer.title,
       visible: eachVisibleLayer.visible,
@@ -110,61 +155,89 @@ $.getJSON("../config/config.json", function (data) {
   });
 
   layerListUI();
-});
-mapRef.on("loadstart", function () {
-  $("#progressBar").show()
-})
-mapRef.on("loadend", function () {
-  $("#progressBar").hide()
-})
-// get info
-mapRef.on("singleclick", function (evt) {
-  $("#progressBar").show()
-  const viewResolution = mapRef.getView().getResolution();
+}
 
-  const layers = mapRef.getAllLayers();
-  var promises = [];
+$.getJSON("../config/config.json", function (data) {
+  window.layerNamesListWMS = data.Layers;
+  localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
+  window.configData = data;
 
-  layers.forEach((eachLayer) => {
-    if (eachLayer.getVisible()) {
-      var source = eachLayer.getSource();
-      if (source instanceof TileWMS) {
-        var url = source.getFeatureInfoUrl(
-          evt.coordinate,
-          viewResolution,
-          "EPSG:3857",
-          { INFO_FORMAT: "application/json", FEATURE_COUNT: "1" }
-        );
-      }
-      if (url) {
-        promises.push(
-          fetch(url, {
-            method: "GET",
-            headers: {
-              Authorization:
-                "Basic " +
-                btoa(
-                  configData.Authrization.UserName +
-                    ":" +
-                    configData.Authrization.Password
-                ),
-            },
-          }).then((response) => response.json())
-        );
-      }
-    }
-  });
-
-  Promise.all(promises).then(function (responses) {
-    //populateDropdown(responses);
-    currentTableIndex = 0;
-    selectedFeatures = responses;
-    handleFeatureSelection(currentTableIndex);
-  });
+  addBaseMap();
+  addCurrentLocationControls();
+  addHighlightLayer();
+  addWMSLayers();
 });
 
+function addMapEvents() {
+  mapRef.on("loadstart", function () {
+    $("#progressBar").show();
+  });
+  mapRef.on("loadend", function () {
+    $("#progressBar").hide();
+  });
+  //mapRef.getView().on('change:resolution', manageLayerVisibiility); // TODO Triveni
+  // get info
+  mapRef.on("singleclick", function (evt) {
+    const { lat, lng } = evt.coordinate;
+    $("#progressBar").show();
+    const viewResolution = mapRef.getView().getResolution();
+
+    const layers = mapRef.getAllLayers();
+    var promises = [];
+
+    layers.forEach((eachLayer) => {
+      if (eachLayer.getVisible()) {
+        var source = eachLayer.getSource();
+        if (source instanceof TileWMS) {
+          var url = source.getFeatureInfoUrl(
+            evt.coordinate,
+            viewResolution,
+            "EPSG:3857",
+            { INFO_FORMAT: "application/json", FEATURE_COUNT: "1" }
+          );
+        }
+        if (url) {
+          console.log("URL = ", url);
+          promises.push(
+            fetch(url, {
+              method: "GET",
+            }).then((response) => response.json())
+          );
+        }
+      }
+    });
+
+    Promise.all(promises).then(function (responses) {
+      //populateDropdown(responses);
+      currentTableIndex = 0;
+      selectedFeatures = responses;
+      console.log(selectedFeatures);
+      handleFeatureSelection(currentTableIndex);
+    });
+  });
+}
+
+function manageLayerVisibiility() {
+  var zoom = mapRef.getView().getZoom();
+  console.log("Zoom = ",zoom);
+  // Loop through layers and toggle visibility based on zoom level
+  // map.getLayers().forEach(function(layer) {
+  //     var minZoom = layer.getMinZoom();
+  //     var maxZoom = layer.getMaxZoom();
+  //     if (zoom >= minZoom && zoom <= maxZoom) {
+  //         layer.setVisible(true); // Show layer
+  //     } else {
+  //         layer.setVisible(false); // Hide layer
+  //     }
+  // });
+}
 
 function handleFeatureSelection(featureId) {
+  // Handle feature selection
+  var feature = selectedFeatures[featureId];
+  highlightSrc.clear(true);
+  highlightSrc.addFeatures(highlightSrc.getFormat().readFeatures(feature));
+
   // Parse the response JSON (replace this with your actual fetch request)
   var data = selectedFeatures[featureId].features[0].properties;
   var featureSourceTable = selectedFeatures[featureId].features[0].id;
@@ -174,12 +247,13 @@ function handleFeatureSelection(featureId) {
     return layer.name === layerTitle;
   });
   layerTitle = layerConfig.title;
-  document.getElementById("popup-heading").innerHTML =
+  document.getElementById("popup-title").innerHTML =
     "<b><u>" + layerTitle + " Record Details</u></b>";
 
   // // Create a new table element
   var table = document.createElement("table");
   table.classList.add("custom-table"); // Add a class for styling, if needed
+  table.id = "infoTable";
 
   // Create table headers
   var headers = ["Property", "Value"];
@@ -189,7 +263,7 @@ function handleFeatureSelection(featureId) {
     th.textContent = header;
     headerRow.appendChild(th);
   });
-  table.appendChild(headerRow);
+  table.appendChild(document.createElement("thead")).appendChild(headerRow);
 
   Object.keys(data).forEach(function (key) {
     var tr = document.createElement("tr");
@@ -201,8 +275,19 @@ function handleFeatureSelection(featureId) {
     tr.appendChild(tdValue);
     table.appendChild(tr);
   });
+  
   openPopup(table);
-  $("#progressBar").hide()
+  new DataTable("#infoTable",
+    {scrollX: false,
+      paging: false,
+      scrollY: 200,
+      order :[],
+      info: false
+    });
+
+
+  
+  $("#progressBar").hide();
 }
 
 function populateDropdown(responses) {
@@ -290,7 +375,6 @@ function layerListUI() {
 
     featureTableButton.onclick = function () {
       showFeatureTable(layerName.title, layerName.name);
-      $("#progressBar").show()
     };
     layerDiv.appendChild(featureTableButton);
 
@@ -305,6 +389,9 @@ function layerListUI() {
 }
 
 function showFeatureTable(layerTitle, layerName) {
+  $("#progressBar").show();
+  $("#featureTableDiv").hide();
+
   var featureTable = document.getElementById("featureTableDataDiv");
   featureTable.innerHTML = "";
 
@@ -321,34 +408,39 @@ function showFeatureTable(layerTitle, layerName) {
     return;
   }
 
-  if(currentLayerNameFeatureData === undefined || currentLayerNameFeatureData != layerName){
+  if (
+    currentLayerNameFeatureData === undefined ||
+    currentLayerNameFeatureData != layerName
+  ) {
     currentLayerNameFeatureData = layerName;
     currentLayerTitleFeatureData = layerTitle;
-    startIndex = 0
+    startIndex = 0;
   }
 
-  console.log(layerName, " >> ",startIndex);
-  var wfsUrl = "http://155.254.244.85/geoserver/guatemala/wfs";
+  console.log(layerName, " >> ", startIndex);
 
   // Construct GetFeature request URL
   var requestUrl =
-    wfsUrl +
+  configData.WMSProxy + "?url=" +configData.WFSEndPoint +
     "?service=WFS&version=1.1.0&request=GetFeature&typeName=" +
     layerName +
-    "&outputFormat=application/json&startIndex="+startIndex+"&maxFeatures="+maxFeaturesCount;
+    "&outputFormat=application/json&startIndex=" +
+    startIndex +
+    "&maxFeatures=" +
+    maxFeaturesCount;
 
   // Send GetFeature request
   fetch(requestUrl, {
     method: "GET",
     headers: {
-      Authorization:
-        "Basic " +
-        btoa(
-          configData.Authrization.UserName +
-            ":" +
-            configData.Authrization.Password
-        ),
-    }
+      // Authorization:
+      //   "Basic " +
+      //   btoa(
+      //     configData.Authrization.UserName +
+      //       ":" +
+      //       configData.Authrization.Password
+      //   ),
+    },
   })
     .then(function (response) {
       return response.json();
@@ -359,41 +451,51 @@ function showFeatureTable(layerTitle, layerName) {
       featureTable.append(table[0]);
       new DataTable("#featureTable", {
         scrollX: true,
-        paging:false,
+        paging: false,
         scrollY: 200,
         layout: {
           topStart: {
             buttons: [
               // "pageLength",
               {
-                extend: 'collection',
-                text: 'Export',
-                buttons: ['copy', 'excel', 'csv']
-            },
-            "colvis"
-              
+                extend: "collection",
+                text: "Export",
+                buttons: ["copy", "excel", "csv"],
+              },
+              "colvis",
             ],
           },
         },
       });
 
       currentLayerTotalFeatureCount = data.totalFeatures;
-      ft_prevButton.disabled = (startIndex === 0) ? true : false;
-      ft_nextButton.disabled = (currentLayerTotalFeatureCount - (startIndex+maxFeaturesCount) < 0) ? true : false;
+      ft_prevButton.disabled = startIndex === 0 ? true : false;
+      ft_nextButton.disabled =
+        currentLayerTotalFeatureCount - (startIndex + maxFeaturesCount) < 0
+          ? true
+          : false;
 
-      var remainingFeatureCount = currentLayerTotalFeatureCount - (startIndex+maxFeaturesCount);
-      if(remainingFeatureCount <=0){
-        remainingFeatureCount = currentLayerTotalFeatureCount ;
-      }else{
-        remainingFeatureCount = startIndex+maxFeaturesCount;
+      var remainingFeatureCount =
+        currentLayerTotalFeatureCount - (startIndex + maxFeaturesCount);
+      if (remainingFeatureCount <= 0) {
+        remainingFeatureCount = currentLayerTotalFeatureCount;
+      } else {
+        remainingFeatureCount = startIndex + maxFeaturesCount;
       }
       // change feature table info message
-      $("#featureTable_info").text("Showing "+(startIndex+1)+" to "+(remainingFeatureCount)+" of "+currentLayerTotalFeatureCount+" features");
-      
+      $("#featureTable_info").text(
+        "Showing " +
+          (startIndex + 1) +
+          " to " +
+          remainingFeatureCount +
+          " of " +
+          currentLayerTotalFeatureCount +
+          " features"
+      );
+
       // Show table
       $("#featureTableDiv").show();
-      $("#progressBar").hide()
-
+      $("#progressBar").hide();
     });
 }
 
@@ -477,26 +579,37 @@ prevButton.addEventListener("click", function () {
   currentTableIndex = Math.max(0, currentTableIndex - 1);
   handleFeatureSelection(currentTableIndex);
 
-  if(selectedFeatures.length > currentTableIndex){
+  if (selectedFeatures.length > currentTableIndex) {
     nextButton.disabled = false;
   }
 
-  if(currentTableIndex === 0){
+  if (currentTableIndex === 0) {
     prevButton.disabled = true;
   }
-
 });
 
+$("#popup-goto-btn").on(
+  "click", function () {
+    // zoom to the selected feature and add animation
+    if (highlightSrc.getFeatures().length > 0) {
+
+      mapRef.getView().fit(highlightSrc.getExtent(), {
+        duration: 1000,
+      });
+      
+    }
+  }
+)
 var nextButton = document.getElementById("popup-next-btn");
 nextButton.addEventListener("click", function () {
   currentTableIndex = Math.min(
     selectedFeatures.length - 1,
     currentTableIndex + 1
   );
-  if(selectedFeatures.length-1 === currentTableIndex){
+  if (selectedFeatures.length - 1 === currentTableIndex) {
     nextButton.disabled = true;
   }
-  if(currentTableIndex > 0){
+  if (currentTableIndex > 0) {
     prevButton.disabled = false;
   }
   handleFeatureSelection(currentTableIndex);
@@ -517,9 +630,10 @@ featureTableDivButton.onclick = function () {
 };
 
 var popupElement = document.getElementById("popup");
-var popupHeader = document.getElementById("popup-header");
-popupElement.style.cursor = "move";
-popupElement.addEventListener("mousedown", function (e) {
+var popupHeader = document.getElementById("popup-heading");
+var popupbutton = document.getElementById("popup-buttons");
+popupbutton.style.cursor = "move";
+popupbutton.addEventListener("mousedown", function (e) {
   e.preventDefault();
   var initialX = e.clientX - popupElement.offsetLeft;
   var initialY = e.clientY - popupElement.offsetTop;
@@ -541,22 +655,21 @@ closeBtn.addEventListener("click", function () {
   document.getElementById("popup").style.display = "none";
 });
 
-
 $("#featureTableDivCloseBtn").on("click", function () {
   $("#featureTableDiv").hide();
-})
+});
 
 var ft_prevButton = document.getElementById("ft_prevButton");
-ft_prevButton.onclick  = function() {
-  if(startIndex !== 0 || (startIndex - maxFeaturesCount >= 0)){
+ft_prevButton.onclick = function () {
+  if (startIndex !== 0 || startIndex - maxFeaturesCount >= 0) {
     startIndex = startIndex - maxFeaturesCount;
   }
   showFeatureTable(currentLayerTitleFeatureData, currentLayerNameFeatureData);
 };
 
 var ft_nextButton = document.getElementById("ft_nextButton");
-ft_nextButton.onclick = function() {
-  if(currentLayerTotalFeatureCount > startIndex+maxFeaturesCount){
+ft_nextButton.onclick = function () {
+  if (currentLayerTotalFeatureCount > startIndex + maxFeaturesCount) {
     startIndex = startIndex + maxFeaturesCount;
   }
   showFeatureTable(currentLayerTitleFeatureData, currentLayerNameFeatureData);

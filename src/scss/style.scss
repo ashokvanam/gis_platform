@@ -1,7 +1,10 @@
 @import "~ol/ol.css";
+@import "~node_modules/ol-ext/dist/ol-ext.css";
 $primary: #0152b4;
 @import "~bootstrap/scss/bootstrap";
 @import "~fontawesome/fontawesome-free/css/all.min.css";
+@import "~node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+@import "~node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css";
 
 
 
@@ -75,12 +78,12 @@ body {
   position: absolute;
   top: 0;
   left: 1em;
-  width: 100%;
+  width: 50%;
   z-index: 1;
 }
 #layerGroupDiv{
   position: absolute;  
-  left: 1em;
+  left: 1.5em;
   width: 100%;
   z-index: 1;
   display: none;
@@ -179,14 +182,14 @@ i {
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid #ccc;
   padding: 15px;
-  width: 300px; /* Adjust as needed */
-  overflow-y: auto; /* Enable vertical scroll bar */
+  max-width: 400px; /* Adjust as needed */
+  // overflow-y: auto; /* Enable vertical scroll bar */
 }
 
 #popup-content{
   margin-bottom: 15px;
   height: 300px;
-  overflow: auto;
+  // overflow: auto;
 }
 
 .popup-heading {

@@ -1,36 +1,53 @@
 {
-    "Title" : "Victoria Map",
-    "WMSEndPoint" : "https://opendata.maps.vic.gov.au/geoserver/wms",
+    "Title" : "Guatemala",
+    "WMSEndPoint" : "http://opendata.maps.vic.gov.au/geoserver/wms",
+    "WFSEndPoint" : "http://opendata.maps.vic.gov.au/geoserver/wfs",
+    "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "Authrization" : {
-        "UserName" :"gis_app",
-        "Password" : "ace$$@123"
+        "UserName" :"",
+        "Password" : ""
+    },
+    "Center":{
+        "X" : 16082576.998675,
+        "Y" : -4460244.759753,
+        "Zoom" : 8
     },
     "Layers" : [
         {
             "name" : "building_polygon",
             "title" : "Property",
-            "visible" : false
+            "visible" : false,
+            "minZoom": 20, 
+            "maxZoom": 30
         },
         {
             "name" : "property_view",
             "title" : "Block",
-            "visible" : true
+            "visible" : false,
+            "minZoom": 18, 
+            "maxZoom": 19
         },
         {
             "name" : "postcode_polygon",
             "title" : "Delegation",
-            "visible" : true
+            "visible" : true,
+            "minZoom": 15, 
+            "maxZoom": 17
         },
         {
             "name" : "ad_vicgov_region",
             "title" : "City",
-            "visible" : true
+            "visible" : false,
+            "minZoom": 1, 
+            "maxZoom": 13
         },
         {
             "name" : "ad_lga_area_polygon",
             "title" : "Zone",
-            "visible" : true
+            "visible" : true,
+            "minZoom": 13, 
+            "maxZoom": 14
         }
     ]
 }

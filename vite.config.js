@@ -8,6 +8,7 @@ export default {
       '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
       '~ol': path.resolve(__dirname, 'node_modules/ol'),
       '~fontawesome': path.resolve(__dirname, 'node_modules/@fortawesome'),
+      '~node_modules': path.resolve(__dirname, 'node_modules'),
     }
   },
   
