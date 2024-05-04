@@ -60,31 +60,34 @@ function addCurrentLocationControls() {
 
   mapRef.addLayer(myLocationlayer);
 
-  navigator.geolocation.watchPosition(
-    function (pos) {
-      const coords = [pos.coords.longitude, pos.coords.latitude];
-      const accuracy = circular(coords, pos.coords.accuracy);
-      myLocationSrc.clear(true);
-      myLocationSrc.addFeatures([
-        new Feature(
-          accuracy.transform("EPSG:4326", mapRef.getView().getProjection())
-        ),
-        new Feature(new Point(olProj.fromLonLat(coords))),
-      ]);
-    },
-    function (error) {
-      console.log(`ERROR: ${error.message}`);
-    },
-    {
-      enableHighAccuracy: true,
-    }
-  );
+  function askLocationPermission(params) {
+    navigator.geolocation.watchPosition(
+      function (pos) {
+        const coords = [pos.coords.longitude, pos.coords.latitude];
+        const accuracy = circular(coords, pos.coords.accuracy);
+        myLocationSrc.clear(true);
+        myLocationSrc.addFeatures([
+          new Feature(
+            accuracy.transform("EPSG:4326", mapRef.getView().getProjection())
+          ),
+          new Feature(new Point(olProj.fromLonLat(coords))),
+        ]);
+      },
+      function (error) {
+        console.log(`ERROR: ${error.message}`);
+      },
+      {
+        enableHighAccuracy: true,
+      }
+    );
+  }
 
   //Locate me Control
   const locate = document.createElement("div");
   locate.className = "ol-control ol-unselectable locate ";
   locate.innerHTML = '<button title="Locate me">◎</button>';
   locate.addEventListener("click", function () {
+    askLocationPermission();
     if (!myLocationSrc.isEmpty()) {
       mapRef.getView().fit(myLocationSrc.getExtent(), {
         maxZoom: 18,
@@ -97,11 +100,11 @@ function addCurrentLocationControls() {
       element: locate,
     })
   );
-console.log("mapRef --> ",mapRef);
-  mapRef.on('zoomstart', function() {
+  console.log("mapRef --> ", mapRef);
+  mapRef.on("zoomstart", function () {
     var zoom = mapRef.getZoom();
-    console.log("zoomstart = ",zoom);
-    
+    console.log("zoomstart = ", zoom);
+
     // Loop through layers and toggle visibility based on zoom level
     // for (var layer in layerConfig) {
     //     if (zoom >= layerConfig[layer].minZoom && zoom <= layerConfig[layer].maxZoom) {
@@ -110,8 +113,7 @@ console.log("mapRef --> ",mapRef);
     //         map.removeLayer(eval(layer)); // Hide layer
     //     }
     // }
-});
-
+  });
 }
 
 function addHighlightLayer() {
@@ -125,11 +127,11 @@ function addHighlightLayer() {
     title: "Highlight",
     style: new Style({
       stroke: new Stroke({
-        color: "red",
+        color: "blue",
         width: 2,
       }),
       fill: new Fill({
-        color: "rgba(255, 0, 0, 0.2)",
+        color: "rgba(0, 0, 255, 0.2)",
       }),
     }),
   });
@@ -157,7 +159,7 @@ function addWMSLayers() {
   layerListUI();
 }
 
-$.getJSON("../config/config.json", function (data) {
+$.getJSON("../config/config_vic.json", function (data) {
   window.layerNamesListWMS = data.Layers;
   localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
   window.configData = data;
@@ -210,9 +212,34 @@ function addMapEvents() {
     Promise.all(promises).then(function (responses) {
       //populateDropdown(responses);
       currentTableIndex = 0;
-      selectedFeatures = responses;
-      console.log(selectedFeatures);
-      handleFeatureSelection(currentTableIndex);
+      selectedFeatures = [];
+
+      // check responses features length and remove []
+      if (responses.length > 0) {
+        for (var i = 0; i < responses.length; i++) {
+          if (responses[i].features.length > 0) {
+            selectedFeatures.push(responses[i]);
+          }
+        }
+      }
+      console.log(selectedFeatures.length);
+
+      if (selectedFeatures.length > 1) {
+        document.getElementById("popup-next-btn").disabled = false;
+        document.getElementById("popup-prev-btn").disabled = true;
+      }else{
+        document.getElementById("popup-next-btn").disabled = true;
+        document.getElementById("popup-prev-btn").disabled = true;
+      }
+
+      if (selectedFeatures.length > 0) {
+        handleFeatureSelection(currentTableIndex);
+      } else {
+        $("#progressBar").hide();
+        console.log("No features found");
+      }
+
+      
     });
   });
 }
@@ -588,18 +615,14 @@ prevButton.addEventListener("click", function () {
   }
 });
 
-$("#popup-goto-btn").on(
-  "click", function () {
-    // zoom to the selected feature and add animation
-    if (highlightSrc.getFeatures().length > 0) {
-
-      mapRef.getView().fit(highlightSrc.getExtent(), {
-        duration: 1000,
-      });
-      
-    }
+$("#popup-goto-btn").on("click", function () {
+  // zoom to the selected feature and add animation
+  if (highlightSrc.getFeatures().length > 0) {
+    mapRef.getView().fit(highlightSrc.getExtent(), {
+      duration: 1000,
+    });
   }
-)
+});
 var nextButton = document.getElementById("popup-next-btn");
 nextButton.addEventListener("click", function () {
   currentTableIndex = Math.min(
@@ -652,6 +675,7 @@ popupbutton.addEventListener("mousedown", function (e) {
 // Close the popup on load
 var closeBtn = document.getElementById("closeBtn");
 closeBtn.addEventListener("click", function () {
+  highlightSrc.clear(true);
   document.getElementById("popup").style.display = "none";
 });
 
