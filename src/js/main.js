@@ -143,7 +143,7 @@ function addWMSLayers() {
     const wmsLayer = new TileLayer({
       source: new TileWMS({
         url:
-          configData.WMSProxy + "?url=http://opendata.maps.vic.gov.au/geoserver/wms?",
+          configData.WMSProxy + "?url=" +configData.WFSEndPoint +"?",
         params: {
           LAYERS: eachVisibleLayer.name,
           FORMAT: "image/png",
@@ -159,7 +159,7 @@ function addWMSLayers() {
   layerListUI();
 }
 
-$.getJSON("../config/config.json", function (data) {
+$.getJSON("../config/config_vic.json", function (data) {
   window.layerNamesListWMS = data.Layers;
   localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
   window.configData = data;
