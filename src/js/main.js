@@ -159,7 +159,7 @@ function addWMSLayers() {
   layerListUI();
 }
 
-$.getJSON("../config/config_vic.json", function (data) {
+$.getJSON("../config/config.json", function (data) {
   window.layerNamesListWMS = data.Layers;
   localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
   window.configData = data;
