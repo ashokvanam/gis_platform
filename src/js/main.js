@@ -138,10 +138,16 @@ function addWMSLayers() {
         },
       }),
       title: eachVisibleLayer.title,
-      minZoom: eachVisibleLayer.minZoom,
-      maxZoom: eachVisibleLayer.maxZoom
+      // minZoom: eachVisibleLayer.minZoom,
+      // maxZoom: eachVisibleLayer.maxZoom,
+      zIndex : eachVisibleLayer.zIndex
       // visible: eachVisibleLayer.visible,
     });
+    if(configData.LayerAutoVisibility == true){
+        //
+        wmsLayer.setMaxZoom(eachVisibleLayer.maxZoom);
+        wmsLayer.setMinZoom(eachVisibleLayer.minZoom)
+    }
     mapRef.addLayer(wmsLayer);
 
     g_wmsLayers_list[eachVisibleLayer.title] = wmsLayer;
@@ -161,7 +167,9 @@ $.getJSON("../config/config.json", function (data) {
   addCurrentLocationControls();
   addHighlightLayer();
   addWMSLayers();
-  manageLayerControls();
+  // if(configData.LayerAutoVisibility == true){
+  //   manageLayerControls();
+  // }
 });
 
 function addMapEvents() {
@@ -171,7 +179,7 @@ function addMapEvents() {
   mapRef.on("loadend", function () {
     $("#progressBar").hide();
   });
-  mapRef.getView().on('change:resolution', manageLayerControls);
+  //mapRef.getView().on('change:resolution', manageLayerControls);
   // get info
   mapRef.on("singleclick", function (evt) {
     const { lat, lng } = evt.coordinate;
@@ -236,34 +244,6 @@ function addMapEvents() {
   });
 }
 
-function manageLayerControls() {
-  var zoom = mapRef.getView().getZoom();
-  var layerNamesListWMS = JSON.parse(localStorage.getItem("layerNamesListWMS"));
-  layerNamesListWMS.forEach((layer) => {
-      var eyeIcon = document.getElementById("eye" + layer.title);
-      var featureTableButton = document.getElementById("featureInfo" + layer.title);
-      // console.log (zoom, " ", layer.title, " ", minZoom, " ", maxZoom )
-      if (zoom >= layer.minZoom && zoom <= layer.maxZoom) {
-        //console.log("Enabled layer : ",layer.title)
-       // g_wmsLayers_list[layer.title].setVisible(true); // Show layer
-        eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
-        featureTableButton.innerHTML =
-          '<i class="fa fa-table" style="color:#0152b4"></i>';
-        featureTableButton.disabled = false;
-        featureTableButton.classList.remove("custom-disabled-btn");
-        
-      } else {
-        //console.log("disabled layer : ",layer.title)
-        //g_wmsLayers_list[layer.title].setVisible(false); // Hide layer
-        eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
-        featureTableButton.innerHTML =
-          '<i class="fa fa-table" style="color:#a4a5a7"></i>';
-        featureTableButton.disabled = true;
-        featureTableButton.classList.add("custom-disabled-btn");
-      }
-  });
-}
-
 function handleFeatureSelection(featureId) {
   // Handle feature selection
   var feature = selectedFeatures[featureId];
@@ -284,7 +264,7 @@ function handleFeatureSelection(featureId) {
 
   // // Create a new table element
   var table = document.createElement("table");
-  table.classList.add("custom-table"); // Add a class for styling, if needed
+  table.classList.add("custom-table"); 
   table.id = "infoTable";
 
   // Create table headers
@@ -322,20 +302,6 @@ function handleFeatureSelection(featureId) {
   $("#progressBar").hide();
 }
 
-function populateDropdown(responses) {
-  var dropdown = document.getElementById("featureDropdown");
-  dropdown.innerHTML = "";
-  responses.forEach(function (response) {
-    var feature = response.features[0];
-    if (feature) {
-      var option = document.createElement("option");
-      option.value = feature.id;
-      option.textContent = feature.id;
-      dropdown.appendChild(option);
-    }
-  });
-}
-
 function openPopup(content) {
   var popup = document.getElementById("popup");
   var popupContent = document.getElementById("popup-content");
@@ -343,35 +309,6 @@ function openPopup(content) {
   popup.style.display = "block";
 }
 
-function authTileLoadFunction(tile, src) {
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = "blob";
-  xhr.open("GET", src);
-  xhr.setRequestHeader(
-    "Authorization",
-    "Basic " +
-      window.btoa(
-        configData.Authrization.UserName +
-          ":" +
-          configData.Authrization.Password
-      )
-  );
-  xhr.onload = function () {
-    if (this.response) {
-      var objectUrl = URL.createObjectURL(xhr.response);
-      tile.getImage().onload = function () {
-        URL.revokeObjectURL(objectUrl);
-      };
-      tile.getImage().src = objectUrl;
-    } else {
-      tile.setState(3);
-    }
-  };
-  xhr.onerror = function () {
-    tile.setState(3);
-  };
-  xhr.send();
-}
 // show list of layers and hide and show option
 
 function layerListUI() {
@@ -381,28 +318,33 @@ function layerListUI() {
   layerNamesListWMS.forEach((layerName) => {
     var layerDiv = document.createElement("div");
 
-    var showHideButton = document.createElement("button");
-    showHideButton.innerHTML =
-      '<i class="fas ' +
-      (layerName.visible === true ? "fa-eye" : "fa-eye-slash") +
-      '"></i>';
-    showHideButton.id = "eye" + layerName.title;
-    showHideButton.classList.add("btn");
-    showHideButton.onclick = function () {
-      toggleLayerVisibility(layerName.title);
-    };
-    layerDiv.appendChild(showHideButton);
+    if(configData.LayerAutoVisibility == false){
+      var showHideButton = document.createElement("button");
+      showHideButton.innerHTML =
+        '<i class="fas ' +
+        (layerName.visible === true ? "fa-eye" : "fa-eye-slash") +
+        '"></i>';
+      showHideButton.id = "eye" + layerName.title;
+      showHideButton.classList.add("btn");
+      showHideButton.onclick = function () {
+        toggleLayerVisibility(layerName.title);
+      };
+      layerDiv.appendChild(showHideButton);
+    }    
 
     var featureTableButton = document.createElement("button");
     featureTableButton.id = "featureInfo" + layerName.title;
     featureTableButton.innerHTML =
       '<i class="fa fa-table" style="color:' +
-      (layerName.visible === true ? "#0152b4" : "#a4a5a7") +
+      (configData.LayerAutoVisibility == true ? "#0152b4" : (layerName.visible === true ? "#0152b4" : "#a4a5a7")) +
       '"></i>';
     featureTableButton.classList.add("btn");
-    if (layerName.visible === false) {
-      featureTableButton.disabled = true;
-      featureTableButton.classList.add("custom-disabled-btn");
+    console.log(">> configData.LayerAutoVisibility ",configData.LayerAutoVisibility)
+    if(configData.LayerAutoVisibility == false){
+      if (layerName.visible === false) {
+        featureTableButton.disabled = true;
+        featureTableButton.classList.add("custom-disabled-btn");
+      }
     }
 
     featureTableButton.onclick = function () {
@@ -658,7 +600,7 @@ featureTableDivButton.onclick = function () {
 };
 
 var popupElement = document.getElementById("popup");
-var popupHeader = document.getElementById("popup-heading");
+//var popupHeader = document.getElementById("popup-heading");
 var popupbutton = document.getElementById("popup-buttons");
 popupbutton.style.cursor = "move";
 popupbutton.addEventListener("mousedown", function (e) {
@@ -703,3 +645,79 @@ ft_nextButton.onclick = function () {
   }
   showFeatureTable(currentLayerTitleFeatureData, currentLayerNameFeatureData);
 };
+
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// Unused methods 
+
+function manageLayerControls() {
+  var zoom = mapRef.getView().getZoom();
+  var layerNamesListWMS = JSON.parse(localStorage.getItem("layerNamesListWMS"));
+  layerNamesListWMS.forEach((layer) => {
+      var eyeIcon = document.getElementById("eye" + layer.title);
+      var featureTableButton = document.getElementById("featureInfo" + layer.title);
+      // console.log (zoom, " ", layer.title, " ", minZoom, " ", maxZoom )
+      if (zoom >= layer.minZoom && zoom <= layer.maxZoom) {
+        eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
+        featureTableButton.innerHTML =
+          '<i class="fa fa-table" style="color:#0152b4"></i>';
+        featureTableButton.disabled = false;
+        featureTableButton.classList.remove("custom-disabled-btn");
+        
+      } else {
+        eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        featureTableButton.innerHTML =
+          '<i class="fa fa-table" style="color:#a4a5a7"></i>';
+        featureTableButton.disabled = true;
+        featureTableButton.classList.add("custom-disabled-btn");
+      }
+  });
+}
+
+function authTileLoadFunction(tile, src) {
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = "blob";
+  xhr.open("GET", src);
+  xhr.setRequestHeader(
+    "Authorization",
+    "Basic " +
+      window.btoa(
+        configData.Authrization.UserName +
+          ":" +
+          configData.Authrization.Password
+      )
+  );
+  xhr.onload = function () {
+    if (this.response) {
+      var objectUrl = URL.createObjectURL(xhr.response);
+      tile.getImage().onload = function () {
+        URL.revokeObjectURL(objectUrl);
+      };
+      tile.getImage().src = objectUrl;
+    } else {
+      tile.setState(3);
+    }
+  };
+  xhr.onerror = function () {
+    tile.setState(3);
+  };
+  xhr.send();
+}
+
+function populateDropdown(responses) {
+  var dropdown = document.getElementById("featureDropdown");
+  dropdown.innerHTML = "";
+  responses.forEach(function (response) {
+    var feature = response.features[0];
+    if (feature) {
+      var option = document.createElement("option");
+      option.value = feature.id;
+      option.textContent = feature.id;
+      dropdown.appendChild(option);
+    }
+  });
+}
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
