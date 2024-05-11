@@ -138,6 +138,8 @@ function addWMSLayers() {
         },
       }),
       title: eachVisibleLayer.title,
+      minZoom: eachVisibleLayer.minZoom,
+      maxZoom: eachVisibleLayer.maxZoom
       // visible: eachVisibleLayer.visible,
     });
     mapRef.addLayer(wmsLayer);
@@ -159,7 +161,7 @@ $.getJSON("../config/config.json", function (data) {
   addCurrentLocationControls();
   addHighlightLayer();
   addWMSLayers();
-  manageLayerVisibiility();
+  manageLayerControls();
 });
 
 function addMapEvents() {
@@ -169,7 +171,7 @@ function addMapEvents() {
   mapRef.on("loadend", function () {
     $("#progressBar").hide();
   });
-  mapRef.getView().on('change:resolution', manageLayerVisibiility); // TODO Triveni
+  mapRef.getView().on('change:resolution', manageLayerControls);
   // get info
   mapRef.on("singleclick", function (evt) {
     const { lat, lng } = evt.coordinate;
@@ -234,18 +236,16 @@ function addMapEvents() {
   });
 }
 
-function manageLayerVisibiility() {
+function manageLayerControls() {
   var zoom = mapRef.getView().getZoom();
   var layerNamesListWMS = JSON.parse(localStorage.getItem("layerNamesListWMS"));
   layerNamesListWMS.forEach((layer) => {
-      var minZoom = layer.minZoom;
-      var maxZoom = layer.maxZoom;
       var eyeIcon = document.getElementById("eye" + layer.title);
       var featureTableButton = document.getElementById("featureInfo" + layer.title);
       // console.log (zoom, " ", layer.title, " ", minZoom, " ", maxZoom )
-      if (zoom >= minZoom && zoom <= maxZoom) {
-        console.log("Enabled layer : ",layer.title)
-        g_wmsLayers_list[layer.title].setVisible(true); // Show layer
+      if (zoom >= layer.minZoom && zoom <= layer.maxZoom) {
+        //console.log("Enabled layer : ",layer.title)
+       // g_wmsLayers_list[layer.title].setVisible(true); // Show layer
         eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
         featureTableButton.innerHTML =
           '<i class="fa fa-table" style="color:#0152b4"></i>';
@@ -253,8 +253,8 @@ function manageLayerVisibiility() {
         featureTableButton.classList.remove("custom-disabled-btn");
         
       } else {
-        console.log("disabled layer : ",layer.title)
-        g_wmsLayers_list[layer.title].setVisible(false); // Hide layer
+        //console.log("disabled layer : ",layer.title)
+        //g_wmsLayers_list[layer.title].setVisible(false); // Hide layer
         eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
         featureTableButton.innerHTML =
           '<i class="fa fa-table" style="color:#a4a5a7"></i>';
