@@ -30,6 +30,7 @@ var maxFeaturesCount = 1000;
 var currentLayerNameFeatureData = undefined;
 var currentLayerTitleFeatureData = undefined;
 var currentLayerTotalFeatureCount = undefined;
+var g_wmsLayers_list = [];
 
 function addBaseMap() {
   window.mapRef = new Map({
@@ -100,20 +101,6 @@ function addCurrentLocationControls() {
       element: locate,
     })
   );
-  console.log("mapRef --> ", mapRef);
-  mapRef.on("zoomstart", function () {
-    var zoom = mapRef.getZoom();
-    console.log("zoomstart = ", zoom);
-
-    // Loop through layers and toggle visibility based on zoom level
-    // for (var layer in layerConfig) {
-    //     if (zoom >= layerConfig[layer].minZoom && zoom <= layerConfig[layer].maxZoom) {
-    //         map.addLayer(eval(layer)); // Show layer
-    //     } else {
-    //         map.removeLayer(eval(layer)); // Hide layer
-    //     }
-    // }
-  });
 }
 
 function addHighlightLayer() {
@@ -151,10 +138,14 @@ function addWMSLayers() {
         },
       }),
       title: eachVisibleLayer.title,
-      visible: eachVisibleLayer.visible,
+      // visible: eachVisibleLayer.visible,
     });
     mapRef.addLayer(wmsLayer);
+
+    g_wmsLayers_list[eachVisibleLayer.title] = wmsLayer;
   });
+
+
 
   layerListUI();
 }
@@ -168,6 +159,7 @@ $.getJSON("../config/config.json", function (data) {
   addCurrentLocationControls();
   addHighlightLayer();
   addWMSLayers();
+  manageLayerVisibiility();
 });
 
 function addMapEvents() {
@@ -177,7 +169,7 @@ function addMapEvents() {
   mapRef.on("loadend", function () {
     $("#progressBar").hide();
   });
-  //mapRef.getView().on('change:resolution', manageLayerVisibiility); // TODO Triveni
+  mapRef.getView().on('change:resolution', manageLayerVisibiility); // TODO Triveni
   // get info
   mapRef.on("singleclick", function (evt) {
     const { lat, lng } = evt.coordinate;
@@ -222,8 +214,6 @@ function addMapEvents() {
           }
         }
       }
-      console.log(selectedFeatures.length);
-
       if (selectedFeatures.length > 1) {
         document.getElementById("popup-next-btn").disabled = false;
         document.getElementById("popup-prev-btn").disabled = true;
@@ -246,17 +236,32 @@ function addMapEvents() {
 
 function manageLayerVisibiility() {
   var zoom = mapRef.getView().getZoom();
-  console.log("Zoom = ",zoom);
-  // Loop through layers and toggle visibility based on zoom level
-  // map.getLayers().forEach(function(layer) {
-  //     var minZoom = layer.getMinZoom();
-  //     var maxZoom = layer.getMaxZoom();
-  //     if (zoom >= minZoom && zoom <= maxZoom) {
-  //         layer.setVisible(true); // Show layer
-  //     } else {
-  //         layer.setVisible(false); // Hide layer
-  //     }
-  // });
+  var layerNamesListWMS = JSON.parse(localStorage.getItem("layerNamesListWMS"));
+  layerNamesListWMS.forEach((layer) => {
+      var minZoom = layer.minZoom;
+      var maxZoom = layer.maxZoom;
+      var eyeIcon = document.getElementById("eye" + layer.title);
+      var featureTableButton = document.getElementById("featureInfo" + layer.title);
+      // console.log (zoom, " ", layer.title, " ", minZoom, " ", maxZoom )
+      if (zoom >= minZoom && zoom <= maxZoom) {
+        console.log("Enabled layer : ",layer.title)
+        g_wmsLayers_list[layer.title].setVisible(true); // Show layer
+        eyeIcon.innerHTML = '<i class="fas fa-eye"></i>';
+        featureTableButton.innerHTML =
+          '<i class="fa fa-table" style="color:#0152b4"></i>';
+        featureTableButton.disabled = false;
+        featureTableButton.classList.remove("custom-disabled-btn");
+        
+      } else {
+        console.log("disabled layer : ",layer.title)
+        g_wmsLayers_list[layer.title].setVisible(false); // Hide layer
+        eyeIcon.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        featureTableButton.innerHTML =
+          '<i class="fa fa-table" style="color:#a4a5a7"></i>';
+        featureTableButton.disabled = true;
+        featureTableButton.classList.add("custom-disabled-btn");
+      }
+  });
 }
 
 function handleFeatureSelection(featureId) {
