@@ -19,7 +19,7 @@
             "name" : "building_polygon",
             "title" : "Property",
             "visible" : false,
-            "minZoom": 20, 
+            "minZoom": 19, 
             "maxZoom": 30,
             "zindex" : 4
         },
@@ -27,16 +27,16 @@
             "name" : "property_view",
             "title" : "Block",
             "visible" : false,
-            "minZoom": 18, 
-            "maxZoom": 19,
+            "minZoom": 16, 
+            "maxZoom": 30,
             "zindex" : 3
         },
         {
             "name" : "postcode_polygon",
             "title" : "Delegation",
             "visible" : true,
-            "minZoom": 15, 
-            "maxZoom": 17,
+            "minZoom": 11, 
+            "maxZoom": 16,
             "zindex" : 2
         },
         {
@@ -44,15 +44,15 @@
             "title" : "City",
             "visible" : true,
             "minZoom": 1, 
-            "maxZoom": 13,
+            "maxZoom": 9,
             "zindex" : 0
         },
         {
             "name" : "ad_lga_area_polygon",
             "title" : "Zone",
             "visible" : true,
-            "minZoom": 13, 
-            "maxZoom": 14,
+            "minZoom": 9, 
+            "maxZoom": 11,
             "zindex" : 1
         }
     ]

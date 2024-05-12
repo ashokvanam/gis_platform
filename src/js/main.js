@@ -181,7 +181,70 @@ function addMapEvents() {
   });
   //mapRef.getView().on('change:resolution', manageLayerControls);
   // get info
+  mapRef.on("pointermove",function(evt){
+    const { lat, lng } = evt.coordinate;
+    $("#progressBar").show();
+    const viewResolution = mapRef.getView().getResolution();
+
+    const layers = mapRef.getAllLayers();
+    var promises = [];  
+
+    layers.forEach((eachLayer) => {
+      //if (eachLayer.getVisible()) {
+        if (eachLayer.rendered){
+        var source = eachLayer.getSource();
+        if (source instanceof TileWMS) {
+          var url = source.getFeatureInfoUrl(
+            evt.coordinate,
+            viewResolution,
+            "EPSG:3857",
+            { INFO_FORMAT: "application/json", FEATURE_COUNT: "1" }
+          );
+        }
+        if (url) {
+          console.log("URL = ", url);
+          promises.push(
+            fetch(url, {
+              method: "GET",
+            }).then((response) => response.json())
+          );
+        }
+      }
+    });
+
+    Promise.all(promises).then(function (responses) {
+      //populateDropdown(responses);
+      currentTableIndex = 0;
+      selectedFeatures = [];
+
+      // check responses features length and remove []
+      if (responses.length > 0) {
+        for (var i = 0; i < responses.length; i++) {
+          if (responses[i].features.length > 0) {
+            selectedFeatures.push(responses[i]);
+          }
+        }
+      }
+      if (selectedFeatures.length > 1) {
+        document.getElementById("popup-next-btn").disabled = false;
+        document.getElementById("popup-prev-btn").disabled = true;
+      }else{
+        document.getElementById("popup-next-btn").disabled = true;
+        document.getElementById("popup-prev-btn").disabled = true;
+      }
+
+      if (selectedFeatures.length > 0) {
+        handleFeatureSelection(currentTableIndex);
+      } else {
+        $("#progressBar").hide();
+        console.log("No features found");
+      }
+
+      
+    });
+  })
   mapRef.on("singleclick", function (evt) {
+    return;
     const { lat, lng } = evt.coordinate;
     $("#progressBar").show();
     const viewResolution = mapRef.getView().getResolution();
