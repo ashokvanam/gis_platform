@@ -181,7 +181,7 @@ function addMapEvents() {
   });
   //mapRef.getView().on('change:resolution', manageLayerControls);
   // get info
-  mapRef.on("pointermove",function(evt){
+  mapRef.on("singleclick",function(evt){    
     const { lat, lng } = evt.coordinate;
     $("#progressBar").show();
     const viewResolution = mapRef.getView().getResolution();
