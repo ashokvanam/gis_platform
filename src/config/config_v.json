@@ -1,23 +1,23 @@
 {
-    "Title" : "Guatemala",
-    "WMSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wms",
-    "WFSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wfs",
+    "Title" : "Victoria",
+    "WMSEndPoint" : "http://opendata.maps.vic.gov.au/geoserver/wms",
+    "WFSEndPoint" : "http://opendata.maps.vic.gov.au/geoserver/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "LayerAutoVisibility" : true,
     "AuthEnabled" : false,
     "Authrization" : {
-        "UserName" :"gis_app",
-        "Password" : "ace$$@123"
+        "UserName" :"",
+        "Password" : ""
     },
-    "Center":{        
-        "X":-90.513501,
-        "Y":14.632673,        
+    "Center":{
+        "X" : 16082576.998675,
+        "Y" : -4460244.759753,
         "Zoom" : 8
     },
     "Layers" : [
         {
-            "name" : "zone_10_parcel",
+            "name" : "building_polygon",
             "title" : "Property",
             "visible" : false,
             "minZoom": 20, 
@@ -25,7 +25,7 @@
             "zindex" : 4
         },
         {
-            "name" : "zone_10_block",
+            "name" : "property_view",
             "title" : "Block",
             "visible" : false,
             "minZoom": 18, 
@@ -33,7 +33,7 @@
             "zindex" : 3
         },
         {
-            "name" : "zone_10_delegation",
+            "name" : "postcode_polygon",
             "title" : "Delegation",
             "visible" : true,
             "minZoom": 15, 
@@ -41,7 +41,7 @@
             "zindex" : 2
         },
         {
-            "name" : "city",
+            "name" : "ad_vicgov_region",
             "title" : "City",
             "visible" : true,
             "minZoom": 1, 
@@ -49,7 +49,7 @@
             "zindex" : 0
         },
         {
-            "name" : "zones",
+            "name" : "ad_lga_area_polygon",
             "title" : "Zone",
             "visible" : true,
             "minZoom": 13, 

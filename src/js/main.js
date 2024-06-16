@@ -191,7 +191,7 @@ function addMapEvents() {
     var promises = [];
 
     layers.forEach((eachLayer) => {
-      if (eachLayer.getVisible()) {
+      if (eachLayer.rendered) {
         var source = eachLayer.getSource();
         if (source instanceof TileWMS) {
           var url = source.getFeatureInfoUrl(
