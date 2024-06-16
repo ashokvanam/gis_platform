@@ -4,6 +4,7 @@
     "WFSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
+    "proxy":false,
     "LayerAutoVisibility" : true,
     "Authrization" : {
         "UserName" :"gis_app",
@@ -13,7 +14,7 @@
     "Center":{
         "X" : -10077041.27941296,
         "Y" : 1645716.3240401675,
-        "Zoom" : 11
+        "Zoom" : 12
     },
     "Layers" : [
         {

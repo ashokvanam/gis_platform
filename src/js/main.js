@@ -130,7 +130,7 @@ function addWMSLayers() {
     const wmsLayer = new TileLayer({
       source: new TileWMS({
         url:
-          configData.WMSProxy + "?url=" +configData.WFSEndPoint +"?",
+          configData.proxy?configData.WMSProxy + "?url=" +configData.WFSEndPoint +"?":configData.WFSEndPoint,
         params: {
           LAYERS: eachVisibleLayer.name,
           FORMAT: "image/png",
@@ -203,6 +203,9 @@ function addMapEvents() {
         }
         if (url) {
           console.log("URL = ", url);
+          // fetch(url, {
+          //   method: "GET",
+          // }).then((response) => console.log(response.json()))
           promises.push(
             fetch(url, {
               method: "GET",
@@ -458,7 +461,7 @@ function showFeatureTable(layerTitle, layerName) {
 
   // Construct GetFeature request URL
   var requestUrl =
-  configData.WMSProxy + "?url=" +configData.WFSEndPoint +
+  configData.proxy?configData.WMSProxy + "?url=" +configData.WFSEndPoint: configData.WFSEndPoint +
     "?service=WFS&version=1.1.0&request=GetFeature&typeName=" +
     layerName +
     "&outputFormat=application/json&startIndex=" +
