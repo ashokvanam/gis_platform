@@ -21,7 +21,7 @@
             "name" : "zone_10_parcel",
             "title" : "Property",
             "visible" : false,
-            "minZoom": 19, 
+            "minZoom": 18, 
             "maxZoom": 30,
             "zindex" : 4
         },
@@ -29,33 +29,33 @@
             "name" : "zone_10_block",
             "title" : "Block",
             "visible" : false,
-            "minZoom": 16, 
-            "maxZoom": 30,
+            "minZoom": 17, 
+            "maxZoom": 18,
             "zindex" : 3
         },
         {
             "name" : "zone_10_delegation",
             "title" : "Delegation",
             "visible" : true,
-            "minZoom": 11, 
-            "maxZoom": 16,
+            "minZoom": 15, 
+            "maxZoom": 17,
             "zindex" : 2
+        },        
+        {
+            "name" : "zones",
+            "title" : "Zone",
+            "visible" : true,
+            "minZoom": 12, 
+            "maxZoom": 15,
+            "zindex" : 1
         },
         {
             "name" : "city",
             "title" : "City",
             "visible" : true,
             "minZoom": 1, 
-            "maxZoom": 9,
+            "maxZoom": 12,
             "zindex" : 0
-        },
-        {
-            "name" : "zones",
-            "title" : "Zone",
-            "visible" : true,
-            "minZoom": 9, 
-            "maxZoom": 11,
-            "zindex" : 1
         }
     ]
 }

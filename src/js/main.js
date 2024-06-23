@@ -136,10 +136,11 @@ function addWMSLayers() {
           FORMAT: "image/png",
           TILED: true,
         },
+        tileLoadFunction:authTileLoadFunction
       }),
       title: eachVisibleLayer.title,
-      // minZoom: eachVisibleLayer.minZoom,
-      // maxZoom: eachVisibleLayer.maxZoom,
+      //minZoom: eachVisibleLayer.minZoom,
+      //maxZoom: eachVisibleLayer.maxZoom,
       zIndex : eachVisibleLayer.zIndex
       // visible: eachVisibleLayer.visible,
     });
