@@ -18,5 +18,6 @@ export default {
   },
   build: {
     sourcemap: true,
+    chunkSizeWarningLimit: 1600
   }
 }
