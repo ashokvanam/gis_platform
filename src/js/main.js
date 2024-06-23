@@ -210,6 +210,15 @@ function addMapEvents() {
           promises.push(
             fetch(url, {
               method: "GET",
+              headers: {
+                Authorization:
+                  "Basic " +
+                  btoa(
+                    configData.Authrization.UserName +
+                      ":" +
+                      configData.Authrization.Password
+                  ),
+              },
             }).then((response) => response.json())
           );
         }
@@ -474,13 +483,13 @@ function showFeatureTable(layerTitle, layerName) {
   fetch(requestUrl, {
     method: "GET",
     headers: {
-      // Authorization:
-      //   "Basic " +
-      //   btoa(
-      //     configData.Authrization.UserName +
-      //       ":" +
-      //       configData.Authrization.Password
-      //   ),
+      Authorization:
+        "Basic " +
+        btoa(
+          configData.Authrization.UserName +
+            ":" +
+            configData.Authrization.Password
+        ),
     },
   })
     .then(function (response) {
