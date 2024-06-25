@@ -1,7 +1,6 @@
 const path = require('path')
-
 export default {
-
+  base:'',
   root: path.resolve(__dirname, 'src'),
   resolve: {
     alias: {
@@ -10,8 +9,7 @@ export default {
       '~fontawesome': path.resolve(__dirname, 'node_modules/@fortawesome'),
       '~node_modules': path.resolve(__dirname, 'node_modules'),
     }
-  },
-  
+  },  
   server: {
     port: 8080,
     hot: true
