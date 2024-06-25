@@ -26,6 +26,14 @@
             "zindex" : 4
         },
         {
+            "name" : "regime",
+            "title" : "Regime",
+            "visible" : false,
+            "minZoom": 17, 
+            "maxZoom": 30,
+            "zindex" : 4
+        },
+        {
             "name" : "zone_10_block",
             "title" : "Block",
             "visible" : false,
