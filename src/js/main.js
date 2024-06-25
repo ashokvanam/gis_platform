@@ -1,6 +1,7 @@
 import "../scss/style.scss";
 import { Map, View } from "ol";
 import $ from "jquery";
+import * as ConfigData from "../config/config.json";
 import "bootstrap";
 import Point from "ol/geom/Point.js";
 import TileLayer from "ol/layer/Tile";
@@ -159,19 +160,31 @@ function addWMSLayers() {
   layerListUI();
 }
 
-$.getJSON("../config/config.json", function (data) {
-  window.layerNamesListWMS = data.Layers;
-  localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
-  window.configData = data;
+//alert(JSON.stringify(ConfigData));
+function readConfig(){
+  window.layerNamesListWMS = ConfigData.Layers;
+  localStorage.setItem("layerNamesListWMS", JSON.stringify(ConfigData.Layers));
+  window.configData = ConfigData;
 
   addBaseMap();
   addCurrentLocationControls();
   addHighlightLayer();
   addWMSLayers();
-  // if(configData.LayerAutoVisibility == true){
-  //   manageLayerControls();
-  // }
-});
+}
+readConfig();
+// $.getJSON("../config/config.json", function (data) {
+//   window.layerNamesListWMS = data.Layers;
+//   localStorage.setItem("layerNamesListWMS", JSON.stringify(data.Layers));
+//   window.configData = data;
+
+//   addBaseMap();
+//   addCurrentLocationControls();
+//   addHighlightLayer();
+//   addWMSLayers();
+//   // if(configData.LayerAutoVisibility == true){
+//   //   manageLayerControls();
+//   // }
+// });
 
 function addMapEvents() {
   mapRef.on("loadstart", function () {
