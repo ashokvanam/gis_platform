@@ -1,7 +1,7 @@
 {
     "Title" : "Guatemala",
-    "WMSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wms",
-    "WFSEndPoint" : "http://155.254.244.85/geoserver/guatemala/wfs",
+    "WMSEndPoint" : "https://155.254.244.85/geoserver/guatemala/wms",
+    "WFSEndPoint" : "https://155.254.244.85/geoserver/guatemala/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
