@@ -19,7 +19,7 @@
     "Layers" : [
         {
             "name" : "parcel",
-            "title" : "Property",
+            "title" : "Parcel",
             "visible" : false,
             "minZoom": 18, 
             "maxZoom": 30,
@@ -35,7 +35,7 @@
         },
         {
             "name" : "block",
-            "title" : "Delegation",
+            "title" : "Block",
             "visible" : true,
             "minZoom": 15, 
             "maxZoom": 17,
@@ -43,15 +43,15 @@
         },        
         {
             "name" : "landbase",
-            "title" : "Zone",
+            "title" : "Landbase",
             "visible" : true,
-            "minZoom": 12, 
-            "maxZoom": 15,
+            "minZoom": 10, 
+            "maxZoom": 30,
             "zindex" : 1
         },
         {
-            "name" : "Boundary",
-            "title" : "City",
+            "name" : "boundary",
+            "title" : "Island Boundary",
             "visible" : true,
             "minZoom": 1, 
             "maxZoom": 12,

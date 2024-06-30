@@ -36,13 +36,13 @@ var g_wmsLayers_list = [];
 function addBaseMap() {
   window.mapRef = new Map({
     target: "map",
-    layers: [
-      new TileLayer({
-        source: new OSM(),
-        title: "Open Street Map",
-        visible: true,
-      }),
-    ],
+    // layers: [
+    //   new TileLayer({
+    //     source: new OSM(),
+    //     title: "Open Street Map",
+    //     visible: true,
+    //   }),
+    // ],
     view: new View({
       center: [configData.Center.X, configData.Center.Y],
       zoom: configData.Center.Zoom,
