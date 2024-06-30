@@ -1,7 +1,7 @@
 {
     "Title" : "Guatemala",
-    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wms",
-    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wfs",
+    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/sansal/wms",
+    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/sansal/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
@@ -12,13 +12,13 @@
     },
     
     "Center":{
-        "X" : -10077041.27941296,
-        "Y" : 1645716.3240401675,
+        "X" : -8291926.857,
+        "Y" : 2757451.719,
         "Zoom" : 12
     },
     "Layers" : [
         {
-            "name" : "zone_10_parcel",
+            "name" : "parcel",
             "title" : "Property",
             "visible" : false,
             "minZoom": 18, 
@@ -26,23 +26,15 @@
             "zindex" : 4
         },
         {
-            "name" : "regime",
-            "title" : "Regime",
+            "name" : "road",
+            "title" : "Road",
             "visible" : false,
             "minZoom": 17, 
             "maxZoom": 30,
-            "zindex" : 4
-        },
-        {
-            "name" : "zone_10_block",
-            "title" : "Block",
-            "visible" : false,
-            "minZoom": 17, 
-            "maxZoom": 18,
             "zindex" : 3
         },
         {
-            "name" : "zone_10_delegation",
+            "name" : "block",
             "title" : "Delegation",
             "visible" : true,
             "minZoom": 15, 
@@ -50,7 +42,7 @@
             "zindex" : 2
         },        
         {
-            "name" : "zones",
+            "name" : "landbase",
             "title" : "Zone",
             "visible" : true,
             "minZoom": 12, 
@@ -58,7 +50,7 @@
             "zindex" : 1
         },
         {
-            "name" : "city",
+            "name" : "Boundary",
             "title" : "City",
             "visible" : true,
             "minZoom": 1, 
