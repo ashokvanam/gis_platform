@@ -20,25 +20,33 @@
         {
             "name" : "parcel",
             "title" : "Parcel",
-            "visible" : false,
-            "minZoom": 18, 
+            "visible" : true,
+            "minZoom": 15, 
             "maxZoom": 30,
-            "zindex" : 4
+            "zindex" : 5
         },
         {
             "name" : "road",
             "title" : "Road",
-            "visible" : false,
-            "minZoom": 17, 
-            "maxZoom": 30,
-            "zindex" : 3
-        },
-        {
-            "name" : "block",
-            "title" : "Block",
             "visible" : true,
             "minZoom": 15, 
-            "maxZoom": 17,
+            "maxZoom": 30,
+            "zindex" : 4
+        },   
+        {
+            "name" : "zone",
+            "title" : "Zone",
+            "visible" : true,
+            "minZoom": 15, 
+            "maxZoom": 30,
+            "zindex" : 3
+        },       
+        {
+            "name" : "subdivision",
+            "title" : "Subdivision",
+            "visible" : true,
+            "minZoom": 10, 
+            "maxZoom": 15,
             "zindex" : 2
         },        
         {

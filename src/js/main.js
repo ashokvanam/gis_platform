@@ -142,7 +142,7 @@ function addWMSLayers() {
       title: eachVisibleLayer.title,
       //minZoom: eachVisibleLayer.minZoom,
       //maxZoom: eachVisibleLayer.maxZoom,
-      zIndex : eachVisibleLayer.zIndex
+      zIndex : eachVisibleLayer.zindex
       // visible: eachVisibleLayer.visible,
     });
     if(configData.LayerAutoVisibility == true){
