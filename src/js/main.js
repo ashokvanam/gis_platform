@@ -139,6 +139,7 @@ function addWMSLayers() {
         },
         tileLoadFunction:authTileLoadFunction
       }),
+      opacity: 0.5,
       title: eachVisibleLayer.title,
       //minZoom: eachVisibleLayer.minZoom,
       //maxZoom: eachVisibleLayer.maxZoom,
