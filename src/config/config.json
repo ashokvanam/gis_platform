@@ -1,7 +1,7 @@
 {
     "Title" : "Guatemala",
-    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/sansal/wms",
-    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/sansal/wfs",
+    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/Panama_geo/wms",
+    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/Panama_geo/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
@@ -12,13 +12,13 @@
     },
     
     "Center":{
-        "X" : -8291926.857,
-        "Y" : 2757451.719,
-        "Zoom" : 12
+        "X" : -8851869.739,
+        "Y" : 1003075.876,
+        "Zoom" : 15
     },
     "Layers" : [
         {
-            "name" : "parcel",
+            "name" : "parcel_geo",
             "title" : "Parcel",
             "visible" : true,
             "minZoom": 15, 
@@ -26,44 +26,13 @@
             "zindex" : 5
         },
         {
-            "name" : "road",
-            "title" : "Road",
-            "visible" : true,
-            "minZoom": 15, 
-            "maxZoom": 30,
-            "zindex" : 4
-        },   
-        {
-            "name" : "zone",
-            "title" : "Zone",
-            "visible" : true,
-            "minZoom": 15, 
-            "maxZoom": 30,
-            "zindex" : 3
-        },       
-        {
-            "name" : "subdivision",
-            "title" : "Subdivision",
-            "visible" : true,
-            "minZoom": 10, 
-            "maxZoom": 15,
-            "zindex" : 2
-        },        
-        {
-            "name" : "landbase",
-            "title" : "Landbase",
-            "visible" : true,
-            "minZoom": 10, 
-            "maxZoom": 30,
-            "zindex" : 1
-        },
-        {
-            "name" : "boundary",
-            "title" : "Island Boundary",
+            "name" : "corregimientos_geo",
+            "title" : "Corregimientos",
             "visible" : true,
             "minZoom": 1, 
-            "maxZoom": 12,
-            "zindex" : 0
+            "maxZoom": 15,
+            "zindex" : 1
         }
+        
     ]
 }
