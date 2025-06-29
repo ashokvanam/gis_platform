@@ -23,7 +23,7 @@
             "visible" : false,
             "minZoom": 18, 
             "maxZoom": 30,
-            "zindex" : 4
+            "zindex" : 5
         },
         {
             "name" : "regime",
@@ -63,7 +63,7 @@
             "visible" : true,
             "minZoom": 1, 
             "maxZoom": 12,
-            "zindex" : 0
+            "zindex" : 1
         }
     ]
 }
