@@ -37,23 +37,11 @@ function addBaseMap() {
   window.mapRef = new Map({
     target: "map",
     layers: [      
-      new TileLayer({
-       source: new TileWMS({
-        url:
-          configData.proxy?configData.WMSProxy + "?url=" +configData.WMSEndPoint +"?":configData.WMSEndPoint,
-        params: {
-          LAYERS: "basemap",
-          FORMAT: "image/png",
-          TILED: true,
-        },
-        tileLoadFunction:authTileLoadFunction
-      }),
-      title: "Basemap",
-      //minZoom: eachVisibleLayer.minZoom,
-      //maxZoom: eachVisibleLayer.maxZoom,
-      zIndex : 0
-      // visible: eachVisibleLayer.visible,
-      }),
+       new TileLayer({
+        source: new OSM(),
+        title: "Open Street Map",
+        visible: true,
+      })
     ],
     view: new View({
       center: [configData.Center.X, configData.Center.Y],

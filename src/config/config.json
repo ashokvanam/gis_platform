@@ -1,7 +1,7 @@
 {
-    "Title" : "Guatemala",
-    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wms",
-    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wfs",
+    "Title" : "Paraguay",
+    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/paraguay/wms",
+    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/paraguay/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
@@ -11,59 +11,51 @@
         "Password" : "ace$$@123"
     },
     
-    "Center":{
-        "X" : -10077041.27941296,
-        "Y" : 1645716.3240401675,
+    "Center":{        
+        "X" : -6411988.623,
+        "Y" : -2911325.324,
         "Zoom" : 12
     },
     "Layers" : [
         {
-            "name" : "zone_10_parcel",
+            "name" : "road",
+            "title" : "Road",
+            "visible" : true,
+             "minZoom": 15, 
+            "maxZoom": 30,
+            "zindex" : 6
+        },  
+        {
+            "name" : "parcel",
             "title" : "Property",
             "visible" : false,
-            "minZoom": 18, 
+            "minZoom": 1, 
             "maxZoom": 30,
             "zindex" : 5
-        },
+        },        
         {
-            "name" : "regime",
-            "title" : "Regime",
+            "name" : "manzanas",
+            "title" : "Manzanas",
             "visible" : false,
-            "minZoom": 17, 
+            "minZoom": 1, 
             "maxZoom": 30,
-            "zindex" : 4
-        },
-        {
-            "name" : "zone_10_block",
-            "title" : "Block",
-            "visible" : false,
-            "minZoom": 17, 
-            "maxZoom": 18,
             "zindex" : 3
         },
         {
-            "name" : "zone_10_delegation",
-            "title" : "Delegation",
+            "name" : "barrios",
+            "title" : "Barrios",
             "visible" : true,
-            "minZoom": 15, 
-            "maxZoom": 17,
+            "minZoom": 1, 
+            "maxZoom": 30,
             "zindex" : 2
         },        
         {
-            "name" : "zones",
+            "name" : "zone",
             "title" : "Zone",
             "visible" : true,
-            "minZoom": 12, 
-            "maxZoom": 15,
-            "zindex" : 1
-        },
-        {
-            "name" : "city",
-            "title" : "City",
-            "visible" : true,
             "minZoom": 1, 
-            "maxZoom": 12,
+            "maxZoom": 30,
             "zindex" : 1
-        }
+        }        
     ]
 }
