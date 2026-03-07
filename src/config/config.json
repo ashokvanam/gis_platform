@@ -1,7 +1,7 @@
 {
     "Title" : "Guatemala",
-    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wms",
-    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/guatemala/wfs",
+    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/nsw_pct/wms",
+    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/nsw_pct/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
@@ -12,57 +12,33 @@
     },
     
     "Center":{
-        "X" : -10077041.27941296,
-        "Y" : 1645716.3240401675,
-        "Zoom" : 12
+        "X" : 16829988.598,
+        "Y" : -3599876.419,
+        "Zoom" : 7
     },
     "Layers" : [
-        {
-            "name" : "zone_10_parcel",
-            "title" : "Property",
+         {
+            "name" : "lot",
+            "title" : "LOT",
             "visible" : false,
-            "minZoom": 18, 
+            "minZoom": 15, 
             "maxZoom": 30,
             "zindex" : 5
-        },
+        },   
         {
-            "name" : "regime",
-            "title" : "Regime",
+            "name" : "lot_pct",
+            "title" : "PCT",
             "visible" : false,
-            "minZoom": 17, 
+            "minZoom": 8, 
             "maxZoom": 30,
-            "zindex" : 4
-        },
+            "zindex" : 5
+        },         
         {
-            "name" : "zone_10_block",
-            "title" : "Block",
-            "visible" : false,
-            "minZoom": 17, 
-            "maxZoom": 18,
-            "zindex" : 3
-        },
-        {
-            "name" : "zone_10_delegation",
-            "title" : "Delegation",
+            "name" : "ibra_region",
+            "title" : "IBRA Sub Region",
             "visible" : true,
-            "minZoom": 15, 
-            "maxZoom": 17,
-            "zindex" : 2
-        },        
-        {
-            "name" : "zones",
-            "title" : "Zone",
-            "visible" : true,
-            "minZoom": 12, 
+            "minZoom": 0, 
             "maxZoom": 15,
-            "zindex" : 1
-        },
-        {
-            "name" : "city",
-            "title" : "City",
-            "visible" : true,
-            "minZoom": 1, 
-            "maxZoom": 12,
             "zindex" : 1
         }
     ]
