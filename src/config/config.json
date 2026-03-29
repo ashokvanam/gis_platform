@@ -31,7 +31,7 @@
             "visible" : false,
             "minZoom": 8, 
             "maxZoom": 30,
-            "zindex" : 5
+            "zindex" : 99
         },         
         {
             "name" : "ibra_region",
