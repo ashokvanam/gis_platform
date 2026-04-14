@@ -218,3 +218,20 @@ i {
   border: 1px solid #ccc; /* Cell borders */
   padding: 8px; /* Cell padding */
 }
+#legendBox {
+  position: absolute;
+  bottom: 70px;   /* sits above button */
+  right: 20px;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 1000;
+  max-width: 220px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+#legendBox img {
+  width: 100%;
+}

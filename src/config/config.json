@@ -1,7 +1,7 @@
 {
     "Title" : "Guatemala",
-    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/nsw_pct/wms",
-    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/nsw_pct/wfs",
+    "WMSEndPoint" : "https://uqgis1.somee.com/geoserver/ekaripark_vegmap2/wms",
+    "WFSEndPoint" : "https://uqgis1.somee.com/geoserver/ekaripark_vegmap2/wfs",
     "WMSProxy" : "http://localhost:3000/wmsDetails",
     "ServerType": "geoserver",
     "proxy":false,
@@ -12,34 +12,39 @@
     },
     
     "Center":{
-        "X" : 16829988.598,
-        "Y" : -3599876.419,
-        "Zoom" : 7
+        "X" : 16443861.830,
+        "Y" : -3100976.374,
+        "Zoom" : 12
     },
     "Layers" : [
          {
-            "name" : "lot",
-            "title" : "LOT",
-            "visible" : false,
-            "minZoom": 15, 
-            "maxZoom": 30,
-            "zindex" : 5
-        },   
-        {
-            "name" : "lot_pct",
-            "title" : "PCT",
-            "visible" : false,
-            "minZoom": 8, 
-            "maxZoom": 30,
-            "zindex" : 99
-        },         
-        {
-            "name" : "ibra_region",
-            "title" : "IBRA Sub Region",
+            "name" : "veg_lot",
+            "title" : "Vegetation",
             "visible" : true,
-            "minZoom": 0, 
-            "maxZoom": 15,
-            "zindex" : 1
+            "minZoom": 1, 
+            "maxZoom": 30,
+            "zIndex" : 99,
+            "showLegend":true
+        },
+         {
+            "name" : "lot",
+            "title" : "Parcel",
+            "visible" : true,
+            "minZoom": 1, 
+            "maxZoom": 30,
+            "zIndex" : 10,
+            "showLegend":false
+        },
+         {
+            "name" : "qld_satellite",
+            "title" : "Satellite",
+            "visible" : true,
+            "minZoom": 1, 
+            "maxZoom": 30,
+            "zIndex" : 1,
+            "showLegend":false
         }
+        
+       
     ]
 }

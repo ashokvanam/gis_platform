@@ -17,6 +17,7 @@
 <body>
   <!-- add header using bootstatp -->
   <div id="map">
+    
     <progress id="progressBar" ></progress>
     
 
@@ -144,7 +145,18 @@
             Found</span></div>
       </div>
     </div>
-  </div>
+  
+    <!-- WMS Legend -->
+<button id="toggleLegend" class="circle-btn" title="Legend"
+  style="position:absolute; bottom: 20px; right: 20px; z-index:1000;">
+  <i class="fa-solid fa-list"></i>
+</button>
+
+<div id="legendBox">
+  <img id="legendImg" src="" alt="Legend">
+</div>
+  
+</div>
   <!-- div for FeatureInfo fix size and add scroll -->
   <div id="popup" class="popup">
 

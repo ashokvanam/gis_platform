@@ -153,13 +153,41 @@ function addWMSLayers() {
     mapRef.addLayer(wmsLayer);
 
     g_wmsLayers_list[eachVisibleLayer.title] = wmsLayer;
+    if (eachVisibleLayer.showLegend){
+      addLegend(eachVisibleLayer);
+    }
+    
   });
+
+   
 
 
 
   layerListUI();
 }
 
+function addLegend(layerConfig){
+        // 🔹 CONFIG
+      const geoserverUrl = configData.proxy?configData.WMSProxy + "?url=" +configData.WMSEndPoint +"?":configData.WMSEndPoint; // change if needed
+      const layerName = layerConfig.name; // 🔥 replace with your actual layer
+
+      // 🔹 Set legend URL
+      const legendImg = document.getElementById('legendImg');
+
+      const legendUrl = `${geoserverUrl}?REQUEST=GetLegendGraphic&FORMAT=image/png&LAYER=${layerName}&LEGEND_OPTIONS=forceLabels:on`;
+
+      legendImg.src = legendUrl;
+
+      // 🔹 Toggle logic
+      const toggleBtn = document.getElementById('toggleLegend');
+      const legendBox = document.getElementById('legendBox');
+
+      toggleBtn.addEventListener('click', () => {
+        legendBox.style.display =
+          legendBox.style.display === 'none' ? 'block' : 'none';
+      });
+
+}
 //alert(JSON.stringify(ConfigData));
 function readConfig(){
   window.layerNamesListWMS = ConfigData.Layers;
